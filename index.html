@@ -38,6 +38,14 @@
     .intro-sub { color:var(--muted);max-width:830px;margin:0; }
     .meta-line {display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:19px;font-size:12px;color:var(--muted);}
     .meta-line span+span::before { content:"·"; margin-right:15px;color:#94a3b8; }
+    .site-navigation{display:flex;align-items:center;justify-content:space-between;gap:18px;padding-top:15px}
+    .nav-picker{min-width:250px;background:#fff;border:1px solid #cbd5e1;border-radius:4px;padding:10px;color:var(--navy);font-weight:600}
+    .mapping-fields{grid-column:1/-1;padding:15px;border:1px solid #cbd5e1;border-radius:4px;background:#f8fafc}
+    .mapping-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:10px}
+    .mapping-grid label{display:block;font-size:12px;font-weight:600}
+    .mapping-grid select{display:block;width:100%;min-height:36px;margin-top:5px}
+    .mapping-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    @media(max-width:730px){.site-navigation{align-items:stretch;flex-direction:column}.nav-picker{width:100%}.mapping-grid{grid-template-columns:1fr}}
     .tabs {display:flex;gap:2px;border-bottom:1px solid var(--border); overflow:auto;scrollbar-width:thin;margin-top:3px; }
     .tab {flex:none;background:transparent;border:0;border-bottom:2px solid transparent;padding:17px 15px 14px;color:var(--muted);font-size:13px;font-weight:550;white-space:nowrap; }
     .tab[aria-selected="true"] { color:var(--navy);border-bottom-color:var(--navy);font-weight:700; }
@@ -153,6 +161,14 @@
     <p class="intro-sub">Consulta documental de propostas de emendas aos projetos de lei orçamentária anual, organizada por parlamentar, exercício, função orçamentária e localidade beneficiada.</p>
     <div class="meta-line"><span>FDUSP / DEF5920</span><span>Pesquisadora: Cristiane da Silva Gonçalves</span><span id="base-indicator">Base incorporada: PLOA 2020</span></div>
   </header>
+  <div class="site-navigation"><label for="site-menu" class="small muted"><strong>Navegação por seções</strong></label>
+    <select id="site-menu" class="nav-picker" aria-label="Ir para uma seção do Observatório">
+      <option value="sobre">Sobre o Observatório</option>
+      <option value="consulta">Base de dados e importação</option>
+      <option value="glossario">Dicionário orçamentário</option>
+      <option value="legislacao">Legislação</option>
+      <option value="metodologia">Fontes e metodologia</option>
+    </select></div>
   <nav class="tabs" role="tablist" aria-label="Seções do Observatório">
     <button type="button" class="tab" role="tab" id="tab-sobre" aria-controls="sobre" aria-selected="true" data-tab="sobre">01 · Sobre</button>
     <button type="button" class="tab" role="tab" id="tab-consulta" aria-controls="consulta" aria-selected="false" data-tab="consulta">02 · Base de dados</button>
@@ -186,7 +202,9 @@
         <aside class="surface chart-card"><h3>Distribuição por função orçamentária</h3><p class="chart-note">Participação por valor proposto (R$), conforme a seleção atual.</p><div id="chart-holder"><canvas id="function-chart" role="img" aria-label="Gráfico horizontal de valores por função orçamentária"></canvas><div id="chart-fallback" hidden></div></div></aside>
       </div>
       <div class="subsection"><div class="section-bar"><h3>Importação de novo lote CSV</h3><a class="text-link" href="#metodologia" data-goto="metodologia">Consulte os campos aceitos</a></div>
-        <div class="surface upload"><div class="field"><label for="csv-file">Arquivo local (.csv, UTF-8)</label><input type="file" id="csv-file" accept=".csv,text/csv" aria-describedby="import-help"></div><div class="field"><label for="import-year">Ano do lote se ausente no CSV</label><select id="import-year"><option value="">Não informado (N/A)</option><option>2020</option><option>2021</option><option>2022</option><option>2023</option></select></div><div class="upload-line"><label><input id="import-append" type="checkbox"> Adicionar à base atual, em vez de substituir</label></div><div class="upload-line" style="justify-content:flex-end"><button class="btn primary" type="button" id="import-btn">Carregar CSV</button></div><div style="grid-column:1/-1"><p class="small muted" id="import-help">O arquivo é processado localmente, sem envio a servidor. Importações não persistem após recarregar a página. Para publicar uma base maior, configure CSV_REPOSITORIO_URL no código e inclua o CSV no repositório; ou atualize os dados embutidos.</p><div role="status" aria-live="polite" id="import-result"></div></div></div>
+        <div class="surface upload"><div class="field"><label for="csv-file">Arquivo local (.csv, UTF-8)</label><input type="file" id="csv-file" accept=".csv,text/csv" aria-describedby="import-help"></div><div class="field"><label for="import-year">Ano do lote se ausente no CSV</label><select id="import-year"><option value="">Não informado (N/A)</option><option>2020</option><option>2021</option><option>2022</option><option>2023</option></select></div><div class="upload-line"><label><input id="import-append" type="checkbox"> Adicionar à base atual, em vez de substituir</label></div><div class="upload-line" style="justify-content:flex-end"><button class="btn primary" type="button" id="import-btn">Carregar CSV</button></div><div id="mapping-panel" class="mapping-fields" hidden><h3>Associar colunas da planilha</h3><p class="small muted">Alguns nomes não foram reconhecidos. Selecione a coluna correspondente em seu arquivo. Campos sem informação permanecerão N/A — não serão inventados.</p><div id="mapping-grid" class="mapping-grid"></div><div class="mapping-actions" style="margin-top:12px"><button type="button" class="btn primary" id="mapping-confirm">Confirmar colunas e importar</button><button type="button" class="btn" id="mapping-cancel">Cancelar</button></div></div>
+        <div style="grid-column:1/-1"><p class="small muted" id="import-help">O CSV é lido no navegador. Se o armazenamento local estiver disponível, os lotes são preservados neste dispositivo mesmo após recarregar a página. Para disponibilizar os dados a todos os visitantes, é necessário publicar o CSV consolidado no repositório GitHub; o botão de importação não altera o servidor.</p>
+        <div class="mapping-actions"><button type="button" class="btn" id="download-full">Baixar base consolidada para publicação (.csv)</button><button type="button" class="btn" id="clear-local">Apagar apenas os dados salvos neste navegador</button></div><div role="status" aria-live="polite" id="import-result"></div></div></div>
       </div>
     </section>
     <section class="panel" id="glossario" role="tabpanel" aria-labelledby="tab-glossario" hidden>
@@ -286,9 +304,11 @@ function switchTab(name){
   if(!document.getElementById(name)||!document.querySelector(`[data-tab="${name}"]`))return;
   $$("[role=tab]").forEach(tab=>{let active=tab.dataset.tab===name;tab.setAttribute("aria-selected",String(active));tab.tabIndex=active?0:-1;});
   $$("[role=tabpanel]").forEach(panel=>{panel.hidden=panel.id!==name;});
+  $("#site-menu").value=name;
   if(name==="consulta")drawChart(filtrados);
 }
-$$("[role=tab]").forEach(tab=>tab.addEventListener("click",()=>switchTab(tab.dataset.tab)));
+$("[role=tab]").forEach(tab=>tab.addEventListener("click",()=>switchTab(tab.dataset.tab)));
+$("#site-menu").addEventListener("change",event=>switchTab(event.target.value));
 $("[role=tablist]").addEventListener("keydown",event=>{
   if(!["ArrowRight","ArrowLeft","Home","End"].includes(event.key))return;
   const tabs=$$("[role=tab]");let index=tabs.findIndex(t=>t.getAttribute("aria-selected")==="true");
@@ -415,22 +435,107 @@ function amountToCents(raw){
   const n=Number(s);if(!Number.isFinite(n)||n<0||!Number.isSafeInteger(Math.round(n*100)))return null;
   return Math.round(n*100);
 }
-function readImported(text,defaultYear){
-  const rows=parseCSV(text);const headers=rows.shift().map(normHeader);
-  const expected=["Autor da Emenda","Valor Proposto","Localidade Beneficiada (Município/Estado)","Classificação Orçamentária (Função/Subfunção)","Justificativa Integral"].map(normHeader);
-  const indexes=expected.map(k=>headers.indexOf(k));
-  if(indexes.some(i=>i<0))throw new Error("Cabeçalhos incompatíveis. Confira as cinco colunas obrigatórias do modelo.");
-  const yearIdx=["Ano/Exercício","Ano","Exercício","Exercicio"].map(normHeader).map(x=>headers.indexOf(x)).find(x=>x>=0);
-  const out=[];rows.forEach((values,i)=>{
-    if(!values.some(v=>v.trim()))return;
-    const fields=indexes.map(index=>display(values[index]));
-    const cents=amountToCents(fields[1]);
-    const rawYear=yearIdx===undefined?"":String(values[yearIdx]??"").trim();
-    const year=rawYear||defaultYear||PLACEHOLDER;
-    out.push({autor:fields[0],valor:cents===null?null:cents/100,centavos:cents,localidade:fields[2],classificacao:fields[3],justificativa:fields[4]===PLACEHOLDER?PLACEHOLDER:cleanLines(fields[4]),ano:year,registro:`IMP-${String(i+1).padStart(5,"0")}`,origem:"CSV importado localmente"});
-  });
-  if(!out.length)throw new Error("O arquivo não contém linhas de emendas.");return out;
+// Nomes equivalentes usados nos extratores R e em planilhas exportadas.
+const CAMPOS_IMPORTACAO = [
+  {key:"autor",title:"Autor da emenda",aliases:["autor da emenda","autor","nome autor","nome parlamentar","parlamentar","autor_emenda","nome_deputado","deputado"]},
+  {key:"valor",title:"Valor proposto",aliases:["valor proposto","valor","valor da emenda","valor_emenda","valor solicitado","valor total","valorproposto"]},
+  {key:"localidade",title:"Localidade beneficiada",aliases:["Localidade Beneficiada (Município/Estado)","localidade","municipio","município","cidade","uf","estado","beneficiario","beneficiário"]},
+  {key:"classificacao",title:"Função / subfunção",aliases:["Classificação Orçamentária (Função/Subfunção)","classificacao","classificação","funcao","função","funcao subfuncao","area de governo","área de governo"]},
+  {key:"justificativa",title:"Justificativa integral",aliases:["justificativa integral","justificativa","descricao","descrição","objeto","finalidade"]},
+  {key:"ano",title:"Ano / exercício",aliases:["Ano/Exercício","ano","exercicio","exercício","ano_loA"]},
+  {key:"registro",title:"Número / registro da emenda",aliases:["numero_emenda","número da emenda","n emenda","numero","registro","id_emenda"]}
+];
+let importacaoPendente=null;
+function detectarMapeamento(headers){
+  const norms=headers.map(normHeader);
+  const resultado={};
+  for(const campo of CAMPOS_IMPORTACAO){
+    const possiveis=campo.aliases.map(normHeader);
+    const index=norms.findIndex(h=>possiveis.includes(h));
+    resultado[campo.key]=index;
+  }
+  return resultado;
 }
+function readImported(text,defaultYear,manual=null){
+  const rows=parseCSV(text);const headers=rows.shift();
+  const cols={...detectarMapeamento(headers),...(manual||{})};
+  if(cols.autor<0||cols.valor<0)throw new Error("É necessário associar ao menos autor e valor proposto.");
+  const out=[];
+  rows.forEach((values,i)=>{
+    if(!values.some(v=>String(v).trim()))return;
+    const get=k=>cols[k]===undefined||cols[k]<0?PLACEHOLDER:display(values[cols[k]]);
+    const cents=amountToCents(get("valor"));
+    const rawYear=get("ano");
+    const year=rawYear!==PLACEHOLDER?rawYear:(defaultYear||PLACEHOLDER);
+    out.push({autor:get("autor"),valor:cents===null?null:cents/100,centavos:cents,
+      localidade:get("localidade"),classificacao:get("classificacao"),
+      justificativa:cleanLines(get("justificativa")),ano:year,
+      registro:get("registro")!==PLACEHOLDER?get("registro"):`IMP-${year}-${String(i+1).padStart(5,"0")}`,
+      origem:"CSV importado (colunas conferidas)"});
+  });
+  if(!out.length)throw new Error("O arquivo não contém linhas de emendas.");
+  return out;
+}
+function exibirMapeamento(text,defaultYear,headers,detected){
+  importacaoPendente={text,defaultYear};
+  const grid=$("#mapping-grid");grid.replaceChildren();
+  CAMPOS_IMPORTACAO.forEach(campo=>{
+    const label=el("label",null,campo.title);
+    const sel=el("select");sel.dataset.field=campo.key;
+    sel.add(new Option("Não disponível (N/A)","-1"));
+    headers.forEach((name,i)=>sel.add(new Option(name||`Coluna ${i+1}`,String(i))));
+    sel.value=String(detected[campo.key]??-1);
+    label.append(sel);grid.append(label);
+  });
+  $("#mapping-panel").hidden=false;
+  setText("#import-result","Confira as correspondências das colunas e clique em Confirmar.");
+}
+function chaveRegistro(r){return [display(r.ano),display(r.registro),keyText(r.autor)].join("|");}
+function combinarSemDuplicatas(existentes,novos){
+  const map=new Map(existentes.map(r=>[chaveRegistro(r),r]));
+  novos.forEach(r=>map.set(chaveRegistro(r),r));
+  return [...map.values()];
+}
+// Persistência exclusiva deste dispositivo, sem expor chaves ou permissões do GitHub.
+const ARMAZENAMENTO="observatorio-emendas-v2";
+function bancoLocal(){
+  return new Promise((resolve,reject)=>{
+    if(!("indexedDB" in window)){reject(new Error("Armazenamento local não suportado"));return;}
+    const req=indexedDB.open(ARMAZENAMENTO,1);
+    req.onupgradeneeded=()=>req.result.createObjectStore("dados");
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error);
+  });
+}
+async function localData(acao,valor){
+  const db=await bancoLocal();
+  try{return await new Promise((resolve,reject)=>{
+    const tx=db.transaction("dados",acao==="get"?"readonly":"readwrite");
+    const store=tx.objectStore("dados");
+    const req=acao==="get"?store.get("registros"):acao==="delete"?store.delete("registros"):store.put(valor,"registros");
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error);
+  });}finally{db.close();}
+}
+async function aplicarImportacao(extra,append){
+  baseDados=append?combinarSemDuplicatas(baseDados,extra):extra;
+  expanded.clear();resetFilters();updateOptions();updateCoverage();render();
+  let persistencia=" Os dados permanecem nesta sessão.";
+  try{await localData("put",baseDados);persistencia=" Base salva neste navegador.";}
+  catch(err){persistencia=` Não foi possível salvar localmente (${err.message}); baixe a base consolidada.`;}
+  setText("#import-result",`${fmtInteger.format(extra.length)} registro(s) lido(s). Base atual: ${fmtInteger.format(baseDados.length)} registro(s).${persistencia} A publicação pública no GitHub exige envio separado.`);
+}
+$("#mapping-confirm").addEventListener("click",async()=>{
+  if(!importacaoPendente)return;
+  const manual={};
+  $$("#mapping-grid select").forEach(sel=>manual[sel.dataset.field]=Number(sel.value));
+  try{
+    const extra=readImported(importacaoPendente.text,importacaoPendente.defaultYear,manual);
+    $("#mapping-panel").hidden=true;importacaoPendente=null;
+    await aplicarImportacao(extra,$("#import-append").checked);
+  }catch(err){setText("#import-result",`Falha ao importar: ${err.message}`);}
+});
+$("#mapping-cancel").addEventListener("click",()=>{$("#mapping-panel").hidden=true;importacaoPendente=null;});
 // Carrega automaticamente um CSV publicado no MESMO repositório do index.html.
 // Mantém o site de arquivo único: não requer backend e funciona no GitHub Pages.
 async function carregarCsvDoRepositorio(caminho=CSV_REPOSITORIO_URL){
@@ -443,28 +548,46 @@ async function carregarCsvDoRepositorio(caminho=CSV_REPOSITORIO_URL){
   setText("#import-result",`${fmtInteger.format(importados.length)} registro(s) carregado(s) do repositório.`);
 }
 $("#import-btn").addEventListener("click",async()=>{
-  const file=$("#csv-file").files[0];const status=$("#import-result");
-  if(!file){status.textContent="Selecione um arquivo .csv antes de carregar.";return;}
+  const file=$("#csv-file").files[0];
+  if(!file){setText("#import-result","Selecione um arquivo CSV antes de importar.");return;}
   try{
-    const extra=readImported(await file.text(),$("#import-year").value);
-    if(!$("#import-append").checked){baseDados=extra;expanded.clear();resetFilters();}
-    else {baseDados=[...baseDados,...extra];expanded.clear();}
-    updateOptions();updateCoverage();render();
-    status.textContent=`${fmtInteger.format(extra.length)} registro(s) importado(s). Base atual: ${fmtInteger.format(baseDados.length)} registro(s). Dados apenas nesta sessão.`;
-  }catch(err){status.textContent=`Falha ao importar: ${err.message}`;}
+    const text=await file.text(),rows=parseCSV(text),headers=rows[0];
+    const detected=detectarMapeamento(headers);
+    if(CAMPOS_IMPORTACAO.slice(0,5).some(c=>detected[c.key]<0)){
+      exibirMapeamento(text,$("#import-year").value,headers,detected);return;
+    }
+    $("#mapping-panel").hidden=true;
+    await aplicarImportacao(readImported(text,$("#import-year").value),$("#import-append").checked);
+  }catch(err){setText("#import-result",`Falha ao importar: ${err.message}`);}
+});
+function downloadCsv(items,name){
+  const rows=[COLUNAS_CSV,...items.map(r=>[display(r.autor),Number.isSafeInteger(r.centavos)?(r.centavos/100).toFixed(2):"N/A",display(r.localidade),display(r.classificacao),display(r.justificativa),display(r.ano)])];
+  const content="\\uFEFF"+rows.map(r=>r.map(csvCell).join(",")).join("\\r\\n");
+  const url=URL.createObjectURL(new Blob([content],{type:"text/csv;charset=utf-8"}));
+  const a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+$("#download-full").addEventListener("click",()=>downloadCsv(baseDados,"emendas-2020-2023-consolidado.csv"));
+$("#clear-local").addEventListener("click",async()=>{
+  if(!confirm("Apagar os dados armazenados somente neste navegador? O CSV público no GitHub não será alterado."))return;
+  try{await localData("delete");setText("#import-result","Dados locais apagados. Atualize a página para recarregar a base publicada.");}
+  catch(err){setText("#import-result",`Não foi possível limpar os dados locais: ${err.message}`);}
 });
 function resetFilters(){["#f-autor","#f-ano","#f-funcao","#f-localidade","#f-termo"].forEach(s=>$(s).value="");expanded.clear();}
 $("#clear-btn").addEventListener("click",()=>{resetFilters();render();});
 ["#f-autor","#f-ano","#f-funcao","#f-localidade"].forEach(s=>$(s).addEventListener("change",()=>{expanded.clear();render();}));
 $("#f-termo").addEventListener("input",()=>{expanded.clear();render();});
 function csvCell(v){const s=String(v??"");return /[",;\r\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
-$("#export-btn").addEventListener("click",()=>{
-  const rows=[COLUNAS_CSV,...filtrados.map(r=>[display(r.autor),Number.isSafeInteger(r.centavos)?(r.centavos/100).toFixed(2):"N/A",display(r.localidade),display(r.classificacao),display(r.justificativa),display(r.ano)])];
-  const content="\uFEFF"+rows.map(r=>r.map(csvCell).join(",")).join("\r\n");
-  const url=URL.createObjectURL(new Blob([content],{type:"text/csv;charset=utf-8"}));
-  const a=document.createElement("a");a.href=url;a.download="observatorio-emendas-selecao.csv";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
-});
+$("#export-btn").addEventListener("click",()=>downloadCsv(filtrados,"observatorio-emendas-selecao.csv"));
 updateOptions();updateCoverage();render();
+(async()=>{
+  try{
+    const salvos=await localData("get");
+    if(Array.isArray(salvos)&&salvos.length){
+      baseDados=salvos;resetFilters();updateOptions();updateCoverage();render();
+      setText("#import-result",`Base local restaurada: ${fmtInteger.format(salvos.length)} registros neste navegador.`);
+    }
+  }catch(err){/* Navegadores privados podem bloquear IndexedDB. */}
+})();
 // Tela inicial é a apresentação; o gráfico será desenhado ao entrar na aba de consulta.
 if(CSV_REPOSITORIO_URL){
   carregarCsvDoRepositorio().catch(err=>{

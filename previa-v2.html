@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Observatório acadêmico de propostas de emendas parlamentares individuais à LOA, 56ª Legislatura.">
+  <title>Observatório das Emendas Individuais à LOA · FDUSP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {--bg:#f8fafc;--white:#fff;--ink:#0f172a;--secondary:#526075;--line:#e2e8f0;--navy:#1e3a8a;--navy-light:#eff6ff;--burgundy:#7f1d1d;--slate:#f1f5f9;--soft:#cbd5e1;--good:#03635b}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.55}
+    button,input,select{font:inherit}
+    button{cursor:pointer} button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+    a{color:var(--navy)}
+    .site-header{background:white;border-bottom:1px solid var(--line)}
+    .header-inner{max-width:1480px;margin:auto;padding:19px 30px 0}
+    .eyebrow{font-size:10px;font-weight:700;letter-spacing:1.2px;color:var(--burgundy);text-transform:uppercase}
+    .brand{display:flex;align-items:flex-start;justify-content:space-between;gap:24px}
+    .brand h1{font-size:25px;letter-spacing:-.6px;line-height:1.3;margin:6px 0}
+    .subtitle{color:var(--secondary);margin:0;font-size:13px}
+    .institutional{text-align:right;font-size:12px;line-height:1.6;color:var(--secondary);white-space:nowrap;padding-top:5px}
+    .institutional strong{color:var(--ink)}
+    .nav{display:flex;gap:24px;margin-top:22px;overflow:auto;white-space:nowrap;scrollbar-width:thin}
+    .tab-btn{border:0;border-bottom:2px solid transparent;background:transparent;padding:12px 0;color:var(--secondary);font-size:13px;font-weight:600}
+    .tab-btn:hover{color:var(--ink)}.tab-btn.active{border-bottom-color:var(--burgundy);color:var(--ink)}
+    .container{max-width:1480px;margin:0 auto;padding:28px 30px 55px}
+    .tab-content{display:none}.tab-content.active{display:block}
+    .section-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:0 0 18px}
+    .section-heading h2{margin:0 0 4px;font-size:20px;letter-spacing:-.4px}
+    .section-heading p{margin:0;font-size:12px;color:var(--secondary)}
+    .notice{border-left:3px solid var(--navy);background:#f0f5ff;color:#263c67;padding:10px 15px;margin:0 0 18px;font-size:12px}
+    .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:22px}
+    .kpi-item{background:white;border:1px solid var(--line);border-radius:6px;padding:16px 18px;min-width:0}
+    .kpi-label{color:var(--secondary);display:block;font-size:11px;font-weight:600;margin-bottom:7px}
+    .kpi-value{font:600 22px/1.3 'IBM Plex Mono',monospace;letter-spacing:-1px;overflow-wrap:anywhere}
+    .kpi-note{color:var(--secondary);font-size:10px;margin:6px 0 0}
+    .explore-layout{display:grid;grid-template-columns:250px minmax(0,1fr) 280px;gap:18px;align-items:start}
+    .panel{border:1px solid var(--line);background:var(--white);border-radius:7px;min-width:0}
+    .panel-title{font-size:13px;font-weight:700;padding:17px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .panel-body{padding:18px}
+    .label{display:block;font-size:11px;font-weight:600;color:var(--secondary);margin:0 0 6px}
+    .form-field{margin-bottom:14px}
+    input[type=text],select{width:100%;min-width:0;border:1px solid var(--line);background:white;border-radius:5px;padding:10px 11px;color:var(--ink);font-size:12px}
+    .btn{border:1px solid var(--line);border-radius:5px;padding:9px 12px;background:white;color:var(--ink);font-size:12px;font-weight:600}
+    .btn:hover{background:var(--slate)}.btn-primary{background:var(--navy);color:white;border-color:var(--navy)}.btn-primary:hover{background:#172c69}
+    .btn-block{width:100%}.btn-small{font-size:11px;padding:7px 10px}
+    .map-area{padding:16px 18px;min-height:370px;display:flex;align-items:center;justify-content:center;background:#fbfcfe;position:relative}
+    #map-svg{width:100%;max-width:700px;height:385px;display:block}
+    .map-state{fill:#e8edf4;stroke:white;stroke-width:1.25;vector-effect:non-scaling-stroke;cursor:pointer;transition:fill .15s}
+    .map-state.has-data{fill:#93a9d8}.map-state.chosen{fill:var(--burgundy);stroke:#611515;stroke-width:2.25}
+    .map-state:hover,.map-state:focus{stroke:var(--navy);stroke-width:2.5;filter:brightness(.92)}
+    .map-label{font:600 10px 'IBM Plex Mono',monospace;fill:#0f172a;pointer-events:none}
+    .map-caption{padding:11px 18px;border-top:1px solid var(--line);font-size:11px;color:var(--secondary)}
+    .legend{display:flex;align-items:center;gap:9px;flex-wrap:wrap;color:var(--secondary);font-size:10px}
+    .legend i{width:12px;height:12px;border-radius:2px;display:inline-block;border:1px solid var(--soft);vertical-align:middle}
+    .map-fallback{width:100%;display:grid;gap:9px;max-width:480px}
+    .fallback-item{border:1px solid var(--line);padding:11px;text-align:left;border-radius:5px;background:white}
+    .fallback-item strong{float:right;font-family:'IBM Plex Mono',monospace}
+    .bar-track{height:5px;background:var(--slate);border-radius:10px;margin-top:8px;overflow:hidden}.bar-fill{height:100%;background:var(--navy)}
+    .map-credits{font-size:10px;color:var(--secondary);margin:0;padding:0 18px 12px}
+    .metric-detail{padding:14px 0;border-bottom:1px solid var(--line)}.metric-detail:first-child{padding-top:0}.metric-detail:last-child{border:0;padding-bottom:0}
+    .metric-detail .small{color:var(--secondary);font-size:11px;display:block;margin-bottom:5px}
+    .metric-detail .value{font-weight:600;font-size:13px;overflow-wrap:anywhere}
+    .tag{display:inline-block;background:var(--slate);color:#334155;border:1px solid var(--line);padding:2px 7px;margin:2px 4px 2px 0;border-radius:3px;font-size:10px}
+    .details-actions{display:grid;gap:9px;margin-top:20px}
+    .results-panel{margin-top:20px}
+    .results-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+    .results-bar h3{font-size:14px;margin:0 0 3px}.muted{color:var(--secondary);font-size:11px}
+    .table-wrap{overflow:auto;width:100%}
+    table{width:100%;border-collapse:collapse;font-size:12px}
+    th{color:var(--secondary);font-weight:700;text-transform:uppercase;letter-spacing:.5px;font-size:10px;text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);white-space:nowrap;background:#fafbfe}
+    td{padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+    tr:last-child td{border-bottom:0}
+    .num{font-family:'IBM Plex Mono',monospace;font-size:12px;white-space:nowrap}
+    .justify{max-width:525px;min-width:290px;white-space:normal;overflow-wrap:break-word;line-height:1.7;color:#334155}
+    .row-title{font-weight:700;display:block}.pill{background:#f0f5ff;color:#294982;border-radius:3px;padding:3px 6px;font-size:10px;display:inline-block;margin-top:6px}
+    .pager{display:flex;align-items:center;justify-content:flex-end;gap:10px;border-top:1px solid var(--line);padding:12px 18px}
+    .footnote{color:var(--secondary);font-size:11px;margin:18px 0}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .subsection{font-size:13px;margin:0 0 15px}
+    .compare-item{padding:14px 0;border-bottom:1px solid var(--line)}.compare-item:last-child{border-bottom:none}
+    .compare-head{display:flex;justify-content:space-between;gap:12px;align-items:start;font-size:13px}.compare-head strong{font-weight:700}
+    .compare-stats{font-size:11px;color:var(--secondary);margin:4px 0 8px}
+    .hbar{height:9px;border-radius:2px;background:var(--slate);overflow:hidden}.hbar span{display:block;height:100%;background:var(--navy)}
+    .placeholder{border:1px dashed #bbc5d5;background:white;border-radius:6px;padding:17px;color:var(--secondary);font-size:12px;line-height:1.6}
+    .placeholder strong{display:block;color:var(--ink);font-size:13px;margin-bottom:8px}
+    .placeholder code{font-size:11px;background:var(--slate);padding:3px}
+    .grid-dict{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+    .grid-dict .placeholder{min-height:128px}
+    .methods-stack{display:grid;gap:16px}.methods-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .method-item{background:#fff;border:1px solid var(--line);padding:14px;border-radius:5px}
+    .method-item strong{font-size:12px;display:block;margin-bottom:5px}
+    .code-label{font-family:'IBM Plex Mono',monospace;color:var(--navy);font-size:10px;margin-bottom:6px}
+    .upload-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+    input[type=file]{font-size:12px;max-width:100%}
+    .inline-check{display:flex;gap:7px;align-items:center;font-size:11px;color:var(--secondary)}
+    .upload-info{font-size:11px;color:var(--secondary);margin-top:8px}
+    .source-links{display:flex;flex-wrap:wrap;gap:8px}
+    .source-links a{display:inline-block;border:1px solid var(--line);padding:7px 11px;border-radius:4px;background:#fff;font-size:11px;text-decoration:none}
+    .source-links a:hover{text-decoration:underline}
+    .footer{border-top:1px solid var(--line);color:var(--secondary);font-size:11px;padding:22px 30px;background:white}
+    .footer-inner{max-width:1420px;margin:auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    dialog{border:1px solid var(--line);border-radius:8px;padding:0;max-width:720px;width:min(94vw,720px);box-shadow:0 22px 70px #0f172a2f;color:var(--ink)}
+    dialog::backdrop{background:rgba(15,23,42,.5)}
+    .modal-top{padding:16px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;align-items:center}
+    .modal-top h2{font-size:17px;margin:0}.modal-body{padding:22px;max-height:70vh;overflow-y:auto}
+    .modal-meta{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:18px}
+    .modal-meta div{min-width:0}.modal-meta span{font-size:11px;color:var(--secondary);display:block}.modal-meta strong{font-size:12px;font-weight:600;overflow-wrap:anywhere}
+    .modal-just{font-size:13px;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere;color:#253245}
+    .modal-actions{display:flex;justify-content:flex-end;gap:9px;padding:14px 22px;border-top:1px solid var(--line)}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:1180px){.explore-layout{grid-template-columns:215px minmax(0,1fr)}.details-panel{grid-column:1/-1}.details-panel .panel-body{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.metric-detail{border-bottom:0;padding:0}.details-actions{margin-top:0}}
+    @media(max-width:780px){.header-inner{padding:17px 16px 0}.container{padding:20px 14px 38px}.brand h1{font-size:19px}.institutional{display:none}.kpi-row{grid-template-columns:repeat(2,1fr);gap:10px}.kpi-item{padding:12px}.kpi-value{font-size:18px}.explore-layout{grid-template-columns:1fr}.details-panel{grid-column:auto}.details-panel .panel-body{display:block}.metric-detail{padding:12px 0;border-bottom:1px solid var(--line)}.two-col{grid-template-columns:1fr}.grid-dict{grid-template-columns:1fr 1fr}.methods-list{grid-template-columns:1fr}.map-area{min-height:290px}#map-svg{height:330px}.nav{gap:18px}}
+    @media(max-width:520px){.grid-dict{grid-template-columns:1fr}.results-bar{flex-wrap:wrap}.modal-meta{grid-template-columns:1fr}.kpi-value{font-size:17px}.map-area{padding:6px}}
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div>
+          <div class="eyebrow">FDUSP <span aria-hidden="true">/</span> DEF5920 <span aria-hidden="true">/</span> Projeto acadêmico</div>
+          <h1>Emendas parlamentares individuais à LOA</h1>
+          <p class="subtitle">Observatório da 56ª Legislatura · Propostas aos PLOAs de 2020 a 2023</p>
+        </div>
+        <div class="institutional">Pesquisadora<br><strong>Cristiane da Silva Gonçalves</strong><br>Faculdade de Direito · USP</div>
+      </div>
+      <nav class="nav" aria-label="Navegação do observatório">
+        <button type="button" class="tab-btn active" data-tab="explorar" aria-selected="true">Explorar dados</button>
+        <button type="button" class="tab-btn" data-tab="comparar" aria-selected="false">Comparar parlamentares</button>
+        <button type="button" class="tab-btn" data-tab="glossario" aria-selected="false">Glossário</button>
+        <button type="button" class="tab-btn" data-tab="metodologia" aria-selected="false">Metodologia e fontes</button>
+      </nav>
+    </div>
+  </header>
+  <main class="container">
+    <section class="tab-content active" id="tab-explorar" aria-labelledby="explorar-title">
+      <div class="section-heading"><div><h2 id="explorar-title">Exploração das propostas</h2><p>Consulta por autoria, classificação orçamentária e localidade indicada nos avulsos.</p></div><span class="pill" id="base-badge">Base inicial · 2020</span></div>
+      <p class="notice"><strong>Critério de leitura:</strong> são valores <strong>propostos</strong> nas emendas, não valores aprovados, empenhados ou pagos. No mapa, as propostas municipais e estaduais são agregadas por UF, sem atribuir valores estaduais a municípios.</p>
+      <div class="kpi-row">
+        <div class="kpi-item"><span class="kpi-label">Emendas na seleção</span><div class="kpi-value" id="kpi-qtd">—</div><div class="kpi-note">Propostas encontradas</div></div>
+        <div class="kpi-item"><span class="kpi-label">Valor total proposto</span><div class="kpi-value" id="kpi-valor">—</div><div class="kpi-note">Somente valores informados</div></div>
+        <div class="kpi-item"><span class="kpi-label">Parlamentares</span><div class="kpi-value" id="kpi-autores">—</div><div class="kpi-note">Autores distintos</div></div>
+        <div class="kpi-item"><span class="kpi-label">UFs identificadas</span><div class="kpi-value" id="kpi-ufs">—</div><div class="kpi-note">Não equivale ao nº de municípios</div></div>
+      </div>
+      <div class="explore-layout">
+        <aside class="panel" aria-label="Filtros de consulta">
+          <div class="panel-title">Filtros <button id="clear-filters" class="btn btn-small" type="button">Limpar</button></div>
+          <div class="panel-body">
+            <div class="form-field"><label class="label" for="f-ano">Exercício orçamentário</label><select id="f-ano"><option value="">Todos disponíveis</option></select></div>
+            <div class="form-field"><label class="label" for="f-autor">Parlamentar</label><select id="f-autor"><option value="">Todos os parlamentares</option></select></div>
+            <div class="form-field"><label class="label" for="f-funcao">Função orçamentária</label><select id="f-funcao"><option value="">Todas as funções</option></select></div>
+            <div class="form-field"><label class="label" for="f-uf">Estado / UF</label><select id="f-uf"><option value="">Todo o Brasil</option></select></div>
+            <div class="form-field"><label class="label" for="f-localidade">Localidade beneficiada</label><select id="f-localidade"><option value="">Todas as localidades</option></select></div>
+            <div class="form-field"><label class="label" for="f-busca">Busca textual</label><input type="text" id="f-busca" placeholder="Número, autor, justificativa…" autocomplete="off"></div>
+            <p class="muted">Os filtros são combinados. Clique em uma UF do mapa para selecionar ou remover o filtro territorial.</p>
+          </div>
+        </aside>
+        <section class="panel" aria-label="Distribuição territorial das emendas">
+          <div class="panel-title">Distribuição territorial <span class="muted">Agregação por UF</span></div>
+          <div class="map-area" id="map-container"><div class="map-fallback"><div class="muted">Carregando limites estaduais para o mapa…</div></div></div>
+          <div class="map-caption"><div class="legend" id="map-legend"><span><i style="background:#e8edf4"></i> Sem emendas na seleção</span><span><i style="background:#6a8ac4"></i> Com emendas</span><span><i style="background:#7f1d1d"></i> UF selecionada</span></div><div style="margin-top:9px">A cor expressa valor agregado por UF, e <strong>não</strong> indica localização exata do gasto municipal.</div></div>
+          <div class="map-credits">Limites estaduais: projeto <a href="https://github.com/henriquemalvar/br-geojson" target="_blank" rel="noopener noreferrer">br-geojson</a>, com dados do IBGE (CC0). Mapa carregado por conexão pública; uma visão alternativa aparece se indisponível.</div>
+        </section>
+        <aside class="panel details-panel" aria-label="Detalhamento da seleção">
+          <div class="panel-title">Detalhamento <span id="selection-label" class="pill">Brasil</span></div>
+          <div class="panel-body">
+            <div class="metric-detail"><span class="small">Abrangência selecionada</span><div class="value" id="detail-uf">Brasil · visão geral</div></div>
+            <div class="metric-detail"><span class="small">Emendas estaduais / municipais</span><div class="value" id="detail-scope">—</div></div>
+            <div class="metric-detail"><span class="small">Autores presentes</span><div class="value" id="detail-autores">—</div></div>
+            <div class="metric-detail"><span class="small">Funções predominantes</span><div class="value" id="detail-funcoes">—</div></div>
+            <div class="details-actions"><button id="scroll-results" class="btn btn-primary btn-block" type="button">Ver emendas e justificativas ↓</button></div>
+          </div>
+        </aside>
+      </div>
+      <section class="panel results-panel" id="resultados">
+        <div class="results-bar"><div><h3>Emendas encontradas</h3><div class="muted">Justificativas completas, sem reticências ou supressões.</div></div><span class="muted" id="results-counter">—</span></div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Emenda / autor</th><th>Localidade</th><th>Função / subfunção</th><th>Valor proposto</th><th>Justificativa integral</th></tr></thead><tbody id="table-body"></tbody></table>
+        </div>
+        <div class="pager"><span class="muted" id="page-info">—</span><button id="prev-page" type="button" class="btn btn-small">Anterior</button><button id="next-page" type="button" class="btn btn-small">Próxima</button></div>
+      </section>
+      <p class="footnote">Fonte inicial: <strong>Congresso Nacional, LEXOR, Avulso de Emendas, PLN 22/2019 (PLOA 2020)</strong>, páginas 1–20 do recorte documental. São 20 propostas de três autores. O conjunto inicial não representa todas as emendas da legislatura.</p>
+      <div class="panel" style="margin-top:18px"><div class="panel-title">Atualizar a base para consulta local <span class="muted">CSV · UTF-8</span></div><div class="panel-body"><p class="muted">Carregue um CSV com as colunas “Autor da Emenda”, “Valor Proposto”, “Localidade Beneficiada (Município/Estado)”, “Classificação Orçamentária (Função/Subfunção)” e “Justificativa Integral”. Também aceita “Ano/Exercício” e “Número da Emenda”. A atualização fica somente nesta aba do navegador; não altera o site público.</p><div class="upload-row"><input id="csv-file" type="file" accept=".csv,text/csv"><label class="inline-check"><input type="checkbox" id="csv-append"> Adicionar à base atual</label><button id="csv-import" type="button" class="btn btn-primary">Importar CSV</button><button id="restore-embedded" type="button" class="btn">Restaurar amostra</button></div><div id="import-message" class="upload-info" aria-live="polite"></div></div></div>
+    </section>
+    <section class="tab-content" id="tab-comparar">
+      <div class="section-heading"><div><h2>Comparação entre parlamentares</h2><p>Distribuição dos valores propostos por autor e função orçamentária, na base e nos filtros atualmente selecionados.</p></div></div>
+      <p class="notice">A comparação considera somente as propostas presentes na base carregada. Não são dados de execução nem um ranking de desempenho parlamentar.</p>
+      <div class="two-col">
+        <div class="panel"><div class="panel-title">Valores propostos por parlamentar</div><div class="panel-body" id="compare-authors"></div></div>
+        <div class="panel"><div class="panel-title">Distribuição por função orçamentária</div><div class="panel-body" id="compare-functions"></div></div>
+      </div>
+      <div class="panel" style="margin-top:18px"><div class="panel-title">Resumo comparativo</div><div class="table-wrap"><table><thead><tr><th>Parlamentar</th><th>Emendas</th><th>Valor total proposto</th><th>Percentual para Saúde</th></tr></thead><tbody id="compare-table"></tbody></table></div></div>
+    </section>
+    <section class="tab-content" id="tab-glossario">
+      <div class="section-heading"><div><h2>Dicionário orçamentário</h2><p>Espaços autorais reservados à explicação de conceitos necessários à leitura dos documentos.</p></div></div>
+      <div class="grid-dict">
+        <div class="placeholder"><strong>PLOA e LOA</strong>[INSERIR EXPLICAÇÃO BÁSICA DA PESQUISADORA]</div>
+        <div class="placeholder"><strong>Emenda Parlamentar Individual (RP 6)</strong>[INSERIR EXPLICAÇÃO BÁSICA DA PESQUISADORA]</div>
+        <div class="placeholder"><strong>Avulso de Emendas e Sistema LEXOR</strong>[INSERIR EXPLICAÇÃO BÁSICA DA PESQUISADORA]</div>
+        <div class="placeholder"><strong>Função e Subfunção Orçamentária</strong>[INSERIR EXPLICAÇÃO BÁSICA DA PESQUISADORA]</div>
+        <div class="placeholder"><strong>Localidade Beneficiada: abrangência estadual e municipal</strong>[INSERIR EXPLICAÇÃO BÁSICA DA PESQUISADORA]</div>
+        <div class="placeholder"><strong>Valores proposto, aprovado, empenhado e pago</strong>[INSERIR EXPLICAÇÃO BÁSICA DA PESQUISADORA]</div>
+        <div class="placeholder"><strong>Transferências Especiais — art. 166-A da Constituição</strong>[INSERIR EXPLICAÇÃO BÁSICA DA PESQUISADORA]</div>
+      </div>
+    </section>
+    <section class="tab-content" id="tab-metodologia">
+      <div class="section-heading"><div><h2>Metodologia, fontes e IA</h2><p>Documentação do processo de extração, tratamento, validação e publicação da base.</p></div></div>
+      <div class="methods-stack">
+        <div class="panel"><div class="panel-title">01 · Delimitação do corpus</div><div class="panel-body"><div class="methods-list"><div class="method-item"><div class="code-label">PLOA 2020 · PLN 22/2019</div><strong>Recorte documental inicial disponível</strong><div class="muted">20 emendas do início do avulso LEXOR.</div></div><div class="method-item"><div class="code-label">PLOAs 2021–2023</div><strong>Expansão prevista</strong><div class="muted">[ESPAÇO RESERVADO PARA TEXTO DA PESQUISADORA]</div></div></div></div></div>
+        <div class="panel"><div class="panel-title">02 · Extração e validação</div><div class="panel-body"><div class="methods-list"><div class="placeholder"><strong>Rotina em R e tratamento do Excel</strong>[ESPAÇO RESERVADO PARA TEXTO DA PESQUISADORA]</div><div class="placeholder"><strong>Extração assistida por IA</strong>[ESPAÇO RESERVADO PARA TEXTO DA PESQUISADORA]</div><div class="placeholder"><strong>Comparação com documento original</strong>[ESPAÇO RESERVADO PARA TEXTO DA PESQUISADORA]</div><div class="placeholder"><strong>Critérios de incompletude e duplicidade</strong>[ESPAÇO RESERVADO PARA TEXTO DA PESQUISADORA]</div></div></div></div>
+        <div class="panel"><div class="panel-title">03 · Limites e interpretação</div><div class="panel-body"><div class="placeholder"><strong>Critérios jurídicos e metodológicos</strong>[ESPAÇO RESERVADO PARA TEXTO DA PESQUISADORA]</div><p class="footnote" style="margin-bottom:0">Regra aplicada na visualização: emendas com indicação apenas estadual não são redistribuídas por municípios. A base de propostas não autoriza inferências sobre execução financeira.</p></div></div>
+        <div class="panel"><div class="panel-title">04 · Protocolo transversal de IA da disciplina</div><div class="panel-body"><p class="muted">Quadro estruturado para inserir as dez perguntas exatas do protocolo, após conferência com o material da disciplina. Não atribuí enunciados não verificados.</p><div class="methods-list" id="protocol-questions"></div></div></div>
+        <div class="panel"><div class="panel-title">05 · Fontes normativas oficiais</div><div class="panel-body"><div class="source-links"><a href="https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm" target="_blank" rel="noopener noreferrer">Constituição Federal ↗</a><a href="https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2011/lei/l12527.htm" target="_blank" rel="noopener noreferrer">Lei de Acesso à Informação ↗</a><a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm" target="_blank" rel="noopener noreferrer">LGPD ↗</a><a href="https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14129.htm" target="_blank" rel="noopener noreferrer">Lei do Governo Digital ↗</a></div><p class="footnote" style="margin-bottom:0">[ESPAÇO RESERVADO PARA TEXTO DA PESQUISADORA SOBRE A PERTINÊNCIA DAS NORMAS]</p></div></div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer"><div class="footer-inner"><div>Observatório das Emendas Parlamentares Individuais à LOA · FDUSP / DEF5920</div><div>Pesquisadora: Cristiane da Silva Gonçalves · Protótipo de pesquisa · Versão 2</div></div></footer>
+  <dialog id="record-dialog" aria-labelledby="modal-title"><div class="modal-top"><h2 id="modal-title">Ficha da emenda</h2><button type="button" class="btn btn-small" id="modal-close-top" aria-label="Fechar ficha">Fechar ×</button></div><div class="modal-body"><div class="modal-meta" id="modal-meta"></div><h3 style="font-size:13px;margin:12px 0">Justificativa integral</h3><div class="modal-just" id="modal-just"></div><p class="footnote" id="modal-source"></p></div><div class="modal-actions"><button type="button" class="btn" id="modal-copy">Copiar justificativa</button><button type="button" class="btn btn-primary" id="modal-close">Fechar</button></div></dialog>
+  <script>
+  "use strict";
+  // BASE INICIAL: 20 emendas documentadas no arquivo do usuário (PDF LEXOR, 20 páginas).
+  // Justificativas preservadas integralmente; apenas quebras de linha são convertidas em espaços.
+  const EMBEDDED_DATA = [{"numero":"38950001","autor":"Abílio Santana","valor":1000000,"localidade":"Bahia (Estado)","funcao":"12 - Educação / 368 - Educação Básica","justificativa":"A PRESENTE EMENDA CONSISTE NA APLICAÇÃO DE RECURSOS DE CUSTEIO EM MUNICÍPIOS DO ESTADO DA BAHIA, COM O OBJETIVO DE VIABILIZAR A MELHORIA DAS CONDIÇÕES DO TRANSPORTE ESCOLAR PARA O ACESSO E A PERMANÊNCIA DOS ALUNOS NA ESCOLA. A OFERTA DO TRANSPORTE ESCOLAR EM CONDIÇÕES FAVORÁVEIS TENDE A MELHORAR O APRENDIZADO DOS ALUNOS QUE DELE NECESSITAM.","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":1},{"numero":"38950002","autor":"Abílio Santana","valor":500000,"localidade":"Uruçuca/BA","funcao":"15 - Urbanismo / 244 - Assistência Comunitária","justificativa":"A PRESENTE EMENDA SE DESTINA A VIABILIZAR RECURSOS PARA AÇÕES DE APOIO À INFRAESTRUTURA PRODUTIVA, COMPREENDENDO SISTEMA DE LOGÍSTICA, TRANSPORTE, ARMAZENAMENTO, AQUISIÇÃO DE MÁQUINAS E EQUIPAMENTOS, OBRAS CIVIS, CONSTRUÇÃO DE EQUIPAMENTOS URBANOS COM O OBJETIVO DE DINAMIZAR E FORTALECER A CAPACIDADE PRODUTIVA NO MUNICÍPIO.","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":2},{"numero":"38950003","autor":"Abílio Santana","valor":2000000,"localidade":"Bahia (Estado)","funcao":"23 - Comércio e Serviços / 695 - Turismo","justificativa":"A PRESENTE EMENDA SE DESTINA A VIABILIZAR RECURSOS FINANCEIROS PARA REALIZAÇÃO DE EVENTOS ATRAVÉS DA SUPERINTENDÊNCIA DE FOMENTO AO TURISMO DO ESTADO DA BAHIA - BAHIATURSA, COM O OBJETIVO DE PROMOVER EVENTOS GERADORES DE FLUXO TURÍSTICO NO ESTADO, CONSOLIDANDO ASSIM O O MESMO COMO DESTINO TURÍSTICO.","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":3},{"numero":"38950004","autor":"Abílio Santana","valor":4450454,"localidade":"Bahia (Estado)","funcao":"10 - Saúde / 301 - Atenção Básica","justificativa":"A PRESENTE EMENDA TEM POR FINALIDADE A DESTINAÇÃO DE RECURSOS DE CUSTEIO PARA VIABILIZAR PROCEDIMENTOS E AÇÕES AFETOS À ATENÇÃO BÁSICA DE SAÚDE EM MUNICÍPIOS DO ESTADO DA BAHIA, GARANTINDO ASSIM A POPULAÇÃO O ACESSO UNIVERSAL, IGUALITÁRIO E GRATUITO À SAÚDE PÚBLICA.","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":4},{"numero":"38950005","autor":"Abílio Santana","valor":765000,"localidade":"Amargosa/BA","funcao":"10 - Saúde / 301 - Atenção Básica","justificativa":"A PRESENTE EMENDA SE DESTINA A VIABILIZAR RECURSOS FINANCEIROS PARA CONSTRUÇÃO DE UMA UNIDADE BÁSICA DE SAÚDE, COM O OBJETIVO DE PROPICIAR À POPULAÇÃO O ACESSO UNIVERSAL, IGUALITÁRIO E GRATUITO À SAÚDE PÚBLICA.","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":5},{"numero":"38950006","autor":"Abílio Santana","valor":260000,"localidade":"Santo Antônio de Jesus/BA","funcao":"27 - Desporto e Lazer / 812 - Desporto Comunitário","justificativa":"A PRESENTE EMENDA SE DESTINA A VIABILIZAR RECURSOS PARA CONSTRUÇÃO DE UMA QUADRA POLIESPORTIVA COM O OBJETIVO REDUZIR A EXCLUSÃO E O RISCO SOCIAL E MELHORAR A QUALIDADE DE VIDA DA POPULAÇÃO, ATRAVÉS DA PRÁTICA DE ESPORTES.","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":6},{"numero":"38950007","autor":"Abílio Santana","valor":765000,"localidade":"Cravolândia/BA","funcao":"10 - Saúde / 301 - Atenção Básica","justificativa":"A PRESENTE EMENDA SE DESTINA A VIABILIZAR RECURSOS FINANCEIROS PARA CONSTRUÇÃO DE UMA UNIDADE BÁSICA DE SAÚDE, COM O OBJETIVO DE MELHORAR O ACESSO UNIVERSAL, IGUALITÁRIO E GRATUITO À SAÚDE PÚBLICA, PRINCIPALMENTE À POPULAÇÃO MAIS CARENTE DO MUNICÍPIO.","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":7},{"numero":"38950008","autor":"Abílio Santana","valor":500000,"localidade":"Nova Itarana/BA","funcao":"10 - Saúde / 301 - Atenção Básica","justificativa":"A PRESENTE EMENDA TEM POR FINALIDADE A DESTINAÇÃO DE RECURSOS DE CUSTEIO PARA VIABILIZAR PROCEDIMENTOS E AÇÕES AFETOS À ATENÇÃO BÁSICA DE SAÚDE, GARANTINDO ASSIM A POPULAÇÃO O ACESSO UNIVERSAL, IGUALITÁRIO E GRATUITO À SAÚDE PÚBLICA.","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":8},{"numero":"38950009","autor":"Abílio Santana","valor":2700000,"localidade":"Bahia (Estado)","funcao":"15 - Urbanismo / 451 - Infra-Estrutura Urbana","justificativa":"A PRESENTE EMENDA SE DESTINA A VIABILIZAR RECURSOS FINANCEIROS AOS MUNICÍPIOS DO ESTADO DA BAHIA, COM O OBJETIVO DE APOIAR AÇÕES DE INFRAESTRUTURA URBANA, TAIS COMO: PAVIMENTAÇÃO, RECAPEAMENTO E CALÇAMENTO DE VIAS URBANAS, ABASTECIMENTO DE ÁGUA, DENTRE OUTRAS CARACTERIZADAS COMO DESENVOLVIMENTO URBANO E QUE CONTRIBUAM PARA A QUALIDADE DE VIDA DA POPULAÇÃO.","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":9},{"numero":"38950010","autor":"Abílio Santana","valor":1000000,"localidade":"Gandu/BA","funcao":"15 - Urbanismo / 451 - Infra-Estrutura Urbana","justificativa":"A PRESENTE EMENDA SE DESTINA A VIABILIZAR RECURSOS FINANCEIROS COM O OBJETIVO DE APOIAR AÇÕES DE INFRAESTRUTURA URBANA, TAIS COMO: PAVIMENTAÇÃO, RECAPEAMENTO E CALÇAMENTO DE VIAS URBANAS, ABASTECIMENTO DE ÁGUA, DENTRE OUTRAS CARACTERIZADAS COMO DESENVOLVIMENTO URBANO E QUE CONTRIBUAM PARA A QUALIDADE DE VIDA DA POPULAÇÃO.","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":10},{"numero":"38950011","autor":"Abílio Santana","valor":2000000,"localidade":"Bahia (Estado)","funcao":"10 - Saúde / 302 - Assistência Hospitalar e Ambulatorial","justificativa":"A PRESENTE EMENDA TEM POR FINALIDADE A DESTINAÇÃO DE RECURSOS DE CUSTEIO PARA VIABILIZAR O DESENVOLVIMENTO DE SERVIÇOS DE ATENÇÃO À SAÚDE EM UNIDADES DE MÉDIA E ALTA COMPLEXIDADE DO ESTADO DA BAHIA, PÚBLICAS OU PRIVADAS, A SERVIÇO DO SISTEMA ÚNICO DE SAÚDE, COM O OBJETIVO DE GARANTIR A POPULAÇÃO O ACESSO UNIVERSAL, IGUALITÁRIO E GRATUITO À SAÚDE PÚBLICA.","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":11},{"numero":"38960001","autor":"Abou Anni","valor":200000,"localidade":"São Paulo (Estado)","funcao":"10 - Saúde / 301 - Atenção Básica","justificativa":"Apoio a aquisição de equipamentos para unidades básicas de saúde no estado de São Paulo.","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":12},{"numero":"38960002","autor":"Abou Anni","valor":1850000,"localidade":"São Paulo (Estado)","funcao":"27 - Desporto e Lazer / 812 - Desporto Comunitário","justificativa":"Implantação e modernização de infra estrutura para o esporte recreativo e de lazer em municípios do estado de São Paulo","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":13},{"numero":"38960003","autor":"Abou Anni","valor":2400000,"localidade":"São Paulo (Estado)","funcao":"10 - Saúde / 301 - Atenção Básica","justificativa":"Apoio a despesas de custeio em unidades de saúde / atenção básica no estado de São Paulo","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":14},{"numero":"38960004","autor":"Abou Anni","valor":1000000,"localidade":"São Paulo (Estado)","funcao":"15 - Urbanismo / 451 - Infra-Estrutura Urbana","justificativa":"Apoio a obras de infra estrutura urbana em municípios do estado de São Paulo","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":15},{"numero":"38960005","autor":"Abou Anni","valor":390454,"localidade":"São Paulo (Estado)","funcao":"27 - Desporto e Lazer / 812 - Desporto Comunitário","justificativa":"Desenvolvimento de Atividades e Apoio a Projetos e Eventos de Esporte, Educação, Lazer e Inclusão Social, a municípios do estado de São Paulo","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":16},{"numero":"38960006","autor":"Abou Anni","valor":4700000,"localidade":"São Paulo (Estado)","funcao":"12 - Educação / 368 - Educação Básica","justificativa":"Recurso destinados a ações de infra estrutura em equipamentos educacionais de municípios do estado de São Paulo;","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":17},{"numero":"38960007","autor":"Abou Anni","valor":5400000,"localidade":"São Paulo (Estado)","funcao":"10 - Saúde / 302 - Assistência Hospitalar e Ambulatorial","justificativa":"Apoio a despesas de custeio em unidades de saúde no estado de São Paulo","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":18},{"numero":"38970001","autor":"Acácio Favacho","valor":4000000,"localidade":"Amapá (Estado)","funcao":"10 - Saúde / 302 - Assistência Hospitalar e Ambulatorial","justificativa":"VISA A REFERIDA EMENDA, DESTINAR RECURSOS A SEREM APLICADOS NO CUSTEIO DE INCREMENTO EM ATENÇÃO EM MÉDIA E ALTA COMPLEXIDADE DOS MUNICÍPIOS DO ESTADO DO AMAPÁ, ACARRETANDO ASSIM MELHORES CONDIÇÕES DE ATENDIMENTO A POPULAÇÃO.","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":19},{"numero":"38970002","autor":"Acácio Favacho","valor":3000000,"localidade":"Amapá (Estado)","funcao":"10 - Saúde / 301 - Atenção Básica","justificativa":"A PRESENTE EMENDA, TEM POR OBJETIVO CUSTEAR O INCREMENTO TEMPORÁRIO AO CUSTEIO DOS SERVIÇOS DE ATENÇÃO BÁSICA EM SAÚDE PARA O CUMPRIMENTO DE METAS - PAB, ACARRETANDO ASSIM, UM ATENDIMENTO DE MAIOR QUALIDADE À POPULAÇÃO DO MUNICÍPIO.","ano":"2020","fonte":"Avulso de Emendas · PLN 22/2019 · LOA 2020","paginaPDF":20}];
+  // VERSÃO DE PRÉVIA: exportação desativada a pedido da pesquisadora.
+  // CSV(S) PÚBLICO(S) DO REPOSITÓRIO: deixe vazio para usar apenas o conjunto inicial.
+  // Ex.: ["./dados/2020/emendas-individuais-2020-parte-01.csv", "./dados/2020/emendas-individuais-2020-parte-02.csv"]
+  // Somente publique bases previamente conferidas, para evitar duplicidades e textos truncados.
+  const PUBLIC_CSV_URLS = [];
+  // Fonte das geometrias: IBGE, via projeto br-geojson (CC0).
+  const MAP_GEOJSON_URL = "https://cdn.jsdelivr.net/gh/henriquemalvar/br-geojson@main/dist/estados.geojson";
+  const UF_NAMES = {AC:"Acre",AL:"Alagoas",AP:"Amapá",AM:"Amazonas",BA:"Bahia",CE:"Ceará",DF:"Distrito Federal",ES:"Espírito Santo",GO:"Goiás",MA:"Maranhão",MT:"Mato Grosso",MS:"Mato Grosso do Sul",MG:"Minas Gerais",PA:"Pará",PB:"Paraíba",PR:"Paraná",PE:"Pernambuco",PI:"Piauí",RJ:"Rio de Janeiro",RN:"Rio Grande do Norte",RS:"Rio Grande do Sul",RO:"Rondônia",RR:"Roraima",SC:"Santa Catarina",SP:"São Paulo",SE:"Sergipe",TO:"Tocantins"};
+  const UF_BY_CODE = {11:"RO",12:"AC",13:"AM",14:"RR",15:"PA",16:"AP",17:"TO",21:"MA",22:"PI",23:"CE",24:"RN",25:"PB",26:"PE",27:"AL",28:"SE",29:"BA",31:"MG",32:"ES",33:"RJ",35:"SP",41:"PR",42:"SC",43:"RS",50:"MS",51:"MT",52:"GO",53:"DF"};
+  const $ = x => document.querySelector(x);
+  const money = new Intl.NumberFormat("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:2});
+  const numfmt = new Intl.NumberFormat("pt-BR");
+  const pctfmt = new Intl.NumberFormat("pt-BR",{style:"percent",maximumFractionDigits:1});
+  const normalizedString = x => String(x??"").trim();
+  let base = EMBEDDED_DATA.map(normalizeRecord), selected=[], page=1, geoFeatures=null, selectedModal=null;
+  const PAGE_SIZE=12;
+  function normalizeText(s){return normalizedString(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();}
+  function readUF(local){
+    const t=normalizedString(local), match=t.match(/^(\d{2})\d{5}\s*-/);
+    if(match&&UF_BY_CODE[match[1]])return UF_BY_CODE[match[1]];
+    const slash=t.match(/(?:\/|\s-\s)([A-Z]{2})(?:\b|$)/);
+    if(slash&&UF_NAMES[slash[1]])return slash[1];
+    const n=normalizeText(t);
+    for(const [uf,name] of Object.entries(UF_NAMES))if(n.includes(normalizeText(name)))return uf;
+    return "";
+  }
+  function readScope(local){
+    const s=normalizedString(local);
+    if(/\(estado\)/i.test(s)||/^\d{2}00000\s*-/.test(s)||/^no estado\b/i.test(s))return "Estadual";
+    if((s.includes("/")&&/\/[A-Z]{2}\b/.test(s))||/^\d{7}\s*-/.test(s)||/\(munic[ií]pio\)/i.test(s))return "Municipal";
+    return "Não identificada";
+  }
+  function readFunction(r){return normalizedString(r.funcao).split(" / ")[0]||"N/A";}
+  function parseValue(v){
+    if(typeof v==="number")return Number.isFinite(v)?v:null;
+    let t=normalizedString(v).replace(/R\$|\s/g,"");
+    if(!t||/^n\/?a$/i.test(t))return null;
+    if(t.includes(",")&&t.includes(".")){t=t.lastIndexOf(",")>t.lastIndexOf(".")?t.replace(/\./g,"").replace(",","."):t.replace(/,/g,"");}
+    else if(t.includes(",")){t=/,\d{1,2}$/.test(t)?t.replace(/\./g,"").replace(",","."):t.replace(/,/g,"");}
+    else if(/^(\d{1,3}\.)+\d{3}$/.test(t)){t=t.replace(/\./g,"");}
+    const n=Number(t);return Number.isFinite(n)&&n>=0?n:null;
+  }
+  function normalizeRecord(d){return {numero:normalizedString(d.numero)||"N/A",autor:normalizedString(d.autor)||"N/A",valor:parseValue(d.valor),localidade:normalizedString(d.localidade)||"N/A",funcao:normalizedString(d.funcao)||"N/A",justificativa:normalizedString(d.justificativa).replace(/\r\n|\r|\n/g," ")||"N/A",ano:normalizedString(d.ano)||"N/A",fonte:normalizedString(d.fonte)||"N/A",paginaPDF:d.paginaPDF??null,uf:readUF(d.localidade),scope:readScope(d.localidade)};}
+  function keyOf(d){return `${d.ano}::${d.numero}`;}
+  function deDuplicate(data){const map=new Map();for(const d of data){if(d.numero!=="N/A"&&d.ano!=="N/A"){if(!map.has(keyOf(d)))map.set(keyOf(d),d);}else map.set(`row::${map.size}`,d);}return [...map.values()];}
+  function element(tag,attrs={},text){const el=document.createElement(tag);for(const [k,v] of Object.entries(attrs)){if(k==="class")el.className=v;else if(k.startsWith("data-"))el.setAttribute(k,v);else el.setAttribute(k,v);}if(text!==undefined)el.textContent=String(text);return el;}
+  function displayMoney(v){return v===null?"N/A":money.format(v);}
+  function sortValues(arr){return [...new Set(arr.filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR",{numeric:true}));}
+  function fillSelect(id,values,defaultLabel,formatter=x=>x){const el=$(id),prev=el.value;el.replaceChildren(new Option(defaultLabel,""));for(const v of sortValues(values))el.add(new Option(formatter(v),v));el.value=sortValues(values).includes(prev)?prev:"";}
+  function updateSelects(){fillSelect("#f-ano",base.map(x=>x.ano),"Todos disponíveis");fillSelect("#f-autor",base.map(x=>x.autor),"Todos os parlamentares");fillSelect("#f-funcao",base.map(readFunction),"Todas as funções");fillSelect("#f-uf",base.map(x=>x.uf),"Todo o Brasil",v=>`${v} · ${UF_NAMES[v]||v}`);fillSelect("#f-localidade",base.map(x=>x.localidade),"Todas as localidades");}
+  function filterData(){const ano=$("#f-ano").value,autor=$("#f-autor").value,func=$("#f-funcao").value,uf=$("#f-uf").value,local=$("#f-localidade").value,term=normalizeText($("#f-busca").value);return base.filter(d=>(!ano||d.ano===ano)&&(!autor||d.autor===autor)&&(!func||readFunction(d)===func)&&(!uf||d.uf===uf)&&(!local||d.localidade===local)&&(!term||normalizeText([d.numero,d.autor,d.localidade,d.funcao,d.justificativa].join(" ")).includes(term)));}
+  function getTotals(data){return {sum:data.reduce((a,d)=>a+(d.valor??0),0),states:new Set(data.map(d=>d.uf).filter(Boolean)).size,authors:new Set(data.map(d=>d.autor)).size};}
+  function pickUF(uf){$("#f-uf").value=$("#f-uf").value===uf?"":uf;page=1;renderAll();}
+  function renderKPI(){const t=getTotals(selected);$("#kpi-qtd").textContent=numfmt.format(selected.length);$("#kpi-valor").textContent=displayMoney(t.sum);$("#kpi-autores").textContent=numfmt.format(t.authors);$("#kpi-ufs").textContent=numfmt.format(t.states);$("#base-badge").textContent=base===null?"—":`${numfmt.format(base.length)} emendas na base`;
+    $("#selection-label").textContent=$("#f-uf").value||"Brasil";$("#detail-uf").textContent=$("#f-uf").value?`${UF_NAMES[$("#f-uf").value]} (${ $("#f-uf").value })`:"Brasil · visão geral";
+    const e=selected.filter(d=>d.scope==="Estadual").length,m=selected.filter(d=>d.scope==="Municipal").length,u=selected.length-e-m;
+    $("#detail-scope").textContent=`${numfmt.format(e)} estadual(is) · ${numfmt.format(m)} municipal(is)`+(u?` · ${u} sem classificação`:"");
+    const names=sortValues(selected.map(d=>d.autor));$("#detail-autores").textContent=names.length?names.join(" · "):"—";
+    const counts=new Map();for(const d of selected)counts.set(readFunction(d),(counts.get(readFunction(d))||0)+1);
+    $("#detail-funcoes").textContent=[...counts.entries()].sort((a,b)=>b[1]-a[1]).slice(0,3).map(([name,n])=>`${name} (${n})`).join(" · ")||"—";
+  }
+  function geometryArrays(geom){if(!geom)return [];return geom.type==="Polygon"?[geom.coordinates]:geom.type==="MultiPolygon"?geom.coordinates:[];}
+  function featureCoords(feature){const out=[];for(const poly of geometryArrays(feature.geometry))for(const ring of poly)for(const pt of ring)if(Array.isArray(pt)&&pt.length>=2)out.push(pt);return out;}
+  function renderMap(){const area=$("#map-container"),group=new Map();for(const d of selected){if(!d.uf)continue;group.set(d.uf,(group.get(d.uf)||0)+(d.valor??0));}const max=Math.max(0,...group.values());
+    if(!geoFeatures){renderMapFallback(area,group,max);return;}
+    area.replaceChildren();const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");svg.setAttribute("id","map-svg");svg.setAttribute("viewBox","0 0 740 500");svg.setAttribute("role","img");svg.setAttribute("aria-label","Mapa clicável dos 26 estados e Distrito Federal com valores de emendas propostos por UF");
+    const pts=geoFeatures.flatMap(featureCoords);if(!pts.length){renderMapFallback(area,group,max);return;}
+    let minx=Infinity,maxx=-Infinity,miny=Infinity,maxy=-Infinity;for(const [x,y] of pts){minx=Math.min(minx,x);maxx=Math.max(maxx,x);miny=Math.min(miny,y);maxy=Math.max(maxy,y);}
+    const s=Math.min(680/(maxx-minx),450/(maxy-miny)),offx=(740-(maxx-minx)*s)/2,offy=(500-(maxy-miny)*s)/2;
+    const project=pt=>[(offx+(pt[0]-minx)*s).toFixed(1),(offy+(maxy-pt[1])*s).toFixed(1)];
+    for(const f of geoFeatures){const uf=f.properties?.sigla||f.properties?.UF||"",name=f.properties?.nome||UF_NAMES[uf]||uf;if(!UF_NAMES[uf])continue;const parts=[];for(const poly of geometryArrays(f.geometry))for(const ring of poly){const coord=ring.map((pt,i)=>(i?"L":"M")+project(pt).join(",")).join(" ");if(coord)parts.push(coord+" Z");}
+      const path=document.createElementNS("http://www.w3.org/2000/svg","path");path.setAttribute("d",parts.join(" "));path.classList.add("map-state");if(group.has(uf)){path.classList.add("has-data");const ratio=(group.get(uf)||0)/(max||1);const alpha=.32+.63*Math.sqrt(ratio);path.style.fill=`rgba(30,58,138,${alpha.toFixed(3)})`;}if($("#f-uf").value===uf)path.classList.add("chosen");path.setAttribute("tabindex","0");path.setAttribute("role","button");path.setAttribute("aria-label",`${name}: ${numfmt.format(selected.filter(x=>x.uf===uf).length)} emendas, ${displayMoney(group.get(uf)??0)}. Selecionar filtro.`);const title=document.createElementNS("http://www.w3.org/2000/svg","title");title.textContent=`${name} (${uf}) · ${numfmt.format(selected.filter(x=>x.uf===uf).length)} emendas · ${displayMoney(group.get(uf)||0)}`;path.append(title);path.addEventListener("click",()=>pickUF(uf));path.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();pickUF(uf);}});svg.append(path);
+    }area.append(svg);
+  }
+  function renderMapFallback(area,group,max){area.replaceChildren();const box=element("div",{class:"map-fallback"});box.append(element("div",{class:"muted"},"Resumo por UF. O mapa vetorial será exibido quando a conexão geográfica estiver disponível."));const arr=[...group.entries()].sort((a,b)=>b[1]-a[1]);if(!arr.length){box.append(element("div",{class:"muted"},"Não há emendas para os filtros selecionados."));}for(const [uf,val] of arr){const item=element("button",{type:"button",class:"fallback-item"});const row=element("div");row.append(element("span",{},`${UF_NAMES[uf]||uf} · ${uf}`),element("strong",{},displayMoney(val)));item.append(row);const track=element("div",{class:"bar-track"});const bar=element("div",{class:"bar-fill"});bar.style.width=`${Math.max(2,100*val/(max||1))}%`;track.append(bar);item.append(track);item.addEventListener("click",()=>pickUF(uf));box.append(item);}area.append(box);}
+  function openModal(d){selectedModal=d;$("#modal-title").textContent=`Emenda nº ${d.numero}`;const box=$("#modal-meta");box.replaceChildren();for(const [k,v] of [["Parlamentar",d.autor],["Exercício",d.ano],["Valor proposto",displayMoney(d.valor)],["Localidade beneficiada",d.localidade],["Função / subfunção",d.funcao],["Abrangência da localidade",d.scope]]){const el=element("div");el.append(element("span",{},k),element("strong",{},v));box.append(el);}$("#modal-just").textContent=d.justificativa;$("#modal-source").textContent=`Fonte: ${d.fonte}`+(d.paginaPDF?` · página ${d.paginaPDF} do PDF de 20 páginas`:"");$("#record-dialog").showModal();}
+  function renderTable(){const tbody=$("#table-body");tbody.replaceChildren();const totalPages=Math.max(1,Math.ceil(selected.length/PAGE_SIZE));page=Math.max(1,Math.min(page,totalPages));const shown=selected.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE);
+    if(!shown.length){const tr=element("tr");const td=element("td",{colspan:"5"},"Nenhuma emenda corresponde aos filtros. Altere ou limpe a seleção.");tr.append(td);tbody.append(tr);}
+    for(const d of shown){const tr=element("tr");const title=element("span",{class:"row-title"},d.numero!=="N/A"?`Nº ${d.numero}`:"Número N/A");const author=element("div",{},d.autor);const but=element("button",{type:"button",class:"btn btn-small"},"Abrir ficha completa");but.style.marginTop="8px";but.addEventListener("click",()=>openModal(d));const tc=element("td");tc.append(title,author,but);
+      const lc=element("td");lc.append(element("div",{},d.localidade),element("span",{class:"pill"},d.scope));
+      const fc=element("td",{},d.funcao),vc=element("td",{class:"num"},displayMoney(d.valor)),jc=element("td",{class:"justify"},d.justificativa);
+      tr.append(tc,lc,fc,vc,jc);tbody.append(tr);}
+    $("#results-counter").textContent=`${numfmt.format(selected.length)} registro(s)`;$("#page-info").textContent=`Página ${page} de ${totalPages}`;$("#prev-page").disabled=page<=1;$("#next-page").disabled=page>=totalPages;
+  }
+  function sumData(data){return data.reduce((v,d)=>v+(d.valor??0),0);}
+  function plotBars(container,values){container.replaceChildren();const max=Math.max(...values.map(x=>x.value),0);for(const x of values){const box=element("div",{class:"compare-item"});const head=element("div",{class:"compare-head"});head.append(element("strong",{},x.name),element("span",{class:"num"},displayMoney(x.value)));box.append(head);if(x.note)box.append(element("div",{class:"compare-stats"},x.note));const track=element("div",{class:"hbar"});const fill=element("span");fill.style.width=`${max===0?0:100*x.value/max}%`;track.append(fill);box.append(track);container.append(box);}if(!values.length)container.append(element("div",{class:"muted"},"Sem registros na seleção."));}
+  function renderComparison(){const byAuthor=new Map(),byFunction=new Map();for(const d of selected){if(!byAuthor.has(d.autor))byAuthor.set(d.autor,[]);byAuthor.get(d.autor).push(d);const f=readFunction(d);if(!byFunction.has(f))byFunction.set(f,[]);byFunction.get(f).push(d);}
+    const av=[...byAuthor].map(([name,dd])=>({name,value:sumData(dd),note:`${dd.length} emenda(s)`})).sort((a,b)=>b.value-a.value);const fv=[...byFunction].map(([name,dd])=>({name,value:sumData(dd),note:`${dd.length} emenda(s)`})).sort((a,b)=>b.value-a.value);
+    plotBars($("#compare-authors"),av);plotBars($("#compare-functions"),fv);const tb=$("#compare-table");tb.replaceChildren();for(const x of av){const dd=byAuthor.get(x.name),health=sumData(dd.filter(d=>readFunction(d).startsWith("10 -")));const tr=element("tr");for(const [v,cl] of [[x.name,""],[numfmt.format(dd.length),"num"],[displayMoney(x.value),"num"],[x.value?pctfmt.format(health/x.value):"N/A","num"]])tr.append(element("td",cl?{class:cl}:{},v));tb.append(tr);}if(!av.length){const tr=element("tr");tr.append(element("td",{colspan:"4"},"Nenhuma emenda na seleção."));tb.append(tr);}}
+  function renderAll(){selected=filterData();renderKPI();renderMap();renderTable();renderComparison();}
+  function resetFilters(){for(const id of ["#f-ano","#f-autor","#f-funcao","#f-uf","#f-localidade","#f-busca"])$(id).value="";page=1;renderAll();}
+  function delimiter(text){let q=false,comma=0,semi=0;for(let i=0;i<text.length;i++){const ch=text[i];if(ch==='"'){if(q&&text[i+1]==='"')i++;else q=!q;}else if(!q&&(ch==='\n'||ch==='\r'))break;else if(!q&&ch===",")comma++;else if(!q&&ch===";")semi++;}return semi>comma?";":",";}
+  function parseCSV(raw){const text=String(raw).replace(/^\uFEFF/,""),sep=delimiter(text),out=[];let quoted=false,field="",row=[];for(let i=0;i<text.length;i++){const ch=text[i];if(quoted){if(ch==='"'&&text[i+1]==='"'){field+='"';i++;}else if(ch==='"')quoted=false;else field+=ch;}else if(ch==='"'&&field==="")quoted=true;else if(ch===sep){row.push(field);field="";}else if(ch==='\r'||ch==='\n'){if(ch==='\r'&&text[i+1]==='\n')i++;row.push(field);if(row.some(x=>x.trim()))out.push(row);row=[];field="";}else field+=ch;}if(quoted)throw new Error("O CSV contém um campo entre aspas não encerrado.");row.push(field);if(row.some(x=>x.trim()))out.push(row);if(out.length<2)throw new Error("Arquivo sem registros de dados.");return out;}
+  function fromCSV(csv){const lines=parseCSV(csv),headers=lines[0].map(x=>normalizeText(x).replace(/\s+/g," "));function col(...aliases){for(const a of aliases){const idx=headers.indexOf(normalizeText(a));if(idx>=0)return idx;}return -1;}
+    const c={autor:col("Autor da Emenda","Autor","Parlamentar"),valor:col("Valor Proposto","Valor"),localidade:col("Localidade Beneficiada (Município/Estado)","Localidade Beneficiada","Localidade"),funcao:col("Classificação Orçamentária (Função/Subfunção)","Função/Subfunção","Classificação Orçamentária"),justificativa:col("Justificativa Integral","Justificativa"),ano:col("Ano/Exercício","Ano","Exercício"),numero:col("Número da Emenda","Número","Emenda")};for(const k of ["autor","valor","localidade","funcao","justificativa"])if(c[k]<0)throw new Error(`Coluna obrigatória ausente: ${k}.`);
+    const records=lines.slice(1).map(line=>normalizeRecord({numero:c.numero<0?"N/A":line[c.numero],autor:line[c.autor],valor:line[c.valor],localidade:line[c.localidade],funcao:line[c.funcao],justificativa:line[c.justificativa],ano:c.ano<0?"N/A":line[c.ano],fonte:"CSV importado · origem documental a conferir"}));return records;}
+  async function importFile(){const file=$("#csv-file").files[0],msg=$("#import-message");if(!file){msg.textContent="Selecione um arquivo CSV antes de importar.";return;}try{const data=fromCSV(await file.text());const merged=$("#csv-append").checked?[...base,...data]:data;base=deDuplicate(merged);updateSelects();resetFilters();msg.textContent=`${numfmt.format(data.length)} registro(s) lido(s). Base ativa: ${numfmt.format(base.length)} emendas. Esta importação não altera o GitHub.`;}catch(e){msg.textContent=`Falha na importação: ${e.message}`;}}
+  async function loadPublicFiles(){if(!PUBLIC_CSV_URLS.length)return;const data=[];for(const path of PUBLIC_CSV_URLS){const r=await fetch(path,{cache:"no-cache"});if(!r.ok)throw new Error(`${path}: erro HTTP ${r.status}`);const arr=fromCSV(await r.text());for(const d of arr)d.fonte=path;data.push(...arr);}base=deDuplicate(data);updateSelects();resetFilters();$("#import-message").textContent=`Base pública carregada: ${numfmt.format(base.length)} registros.`;}
+  // Change tabs without reloading state.
+  document.querySelectorAll(".tab-btn").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".tab-btn").forEach(x=>{x.classList.toggle("active",x===b);x.setAttribute("aria-selected",x===b?"true":"false");});document.querySelectorAll(".tab-content").forEach(s=>s.classList.toggle("active",s.id===`tab-${b.dataset.tab}`));}));
+  for(const id of ["#f-ano","#f-autor","#f-funcao","#f-uf","#f-localidade"])$(id).addEventListener("change",()=>{page=1;renderAll();});
+  $("#f-busca").addEventListener("input",()=>{page=1;renderAll();});
+  $("#clear-filters").addEventListener("click",resetFilters);
+  $("#scroll-results").addEventListener("click",()=>$("#resultados").scrollIntoView({behavior:"smooth",block:"start"}));
+  $("#prev-page").addEventListener("click",()=>{if(page>1){page--;renderTable();}});
+  $("#next-page").addEventListener("click",()=>{if(page*PAGE_SIZE<selected.length){page++;renderTable();}});
+  $("#csv-import").addEventListener("click",importFile);
+  $("#restore-embedded").addEventListener("click",()=>{base=EMBEDDED_DATA.map(normalizeRecord);updateSelects();resetFilters();$("#import-message").textContent="Amostra documental inicial de 20 emendas restaurada.";});
+  $("#modal-close").addEventListener("click",()=>$("#record-dialog").close());
+  $("#modal-close-top").addEventListener("click",()=>$("#record-dialog").close());
+  $("#modal-copy").addEventListener("click",async()=>{if(!selectedModal)return;try{await navigator.clipboard.writeText(selectedModal.justificativa);$("#modal-copy").textContent="Texto copiado";setTimeout(()=>$("#modal-copy").textContent="Copiar justificativa",1500);}catch(e){$("#modal-copy").textContent="Selecione o texto para copiar";}});
+  for(let i=1;i<=10;i++){const item=element("div",{class:"method-item"});item.append(element("div",{class:"code-label"},`Pergunta ${String(i).padStart(2,"0")}`),element("div",{},"[INSERIR ENUNCIADO OFICIAL E RESPOSTA DA PESQUISADORA]"));$("#protocol-questions").append(item);}
+  updateSelects();renderAll();
+  fetch(MAP_GEOJSON_URL).then(r=>{if(!r.ok)throw Error("Mapa indisponível");return r.json();}).then(json=>{if(!Array.isArray(json.features)||json.features.length<27)throw Error("Malha inválida");geoFeatures=json.features;renderMap();}).catch(()=>renderMap());
+  loadPublicFiles().catch(e=>$("#import-message").textContent=`Base pública não carregada: ${e.message}. A amostra inicial permanece acessível.`);
+  </script>
+</body></html>
